@@ -1,8 +1,12 @@
 import DeployButton from "../components/DeployButton";
 import AuthButton from "../components/AuthButton";
 import Header from "@/components/Header";
+// import { Auth } from "@supabase/auth-ui-react";
+// import { ThemeSupa } from "@supabase/auth-ui-shared";
+// import { createClient } from "@/utils/supabase/client";
 
 export default async function Index() {
+  // const supabase = await createClient();
   return (
     <div className="flex-1 w-full flex flex-col gap-20 items-center">
       <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
@@ -16,7 +20,14 @@ export default async function Index() {
         <Header />
         <main className="flex-1 flex flex-col gap-6">
           <h2 className="font-bold text-4xl mb-4">Next steps</h2>
-          {/*  */}
+          {/* <Auth
+            supabaseClient={supabase}
+            providers={["google"]}
+            appearance={{ theme: ThemeSupa }}
+            theme="light"
+            view="magic_link"
+            redirectTo="http://localhost:3000/auth/callback"
+          /> */}
         </main>
       </div>
 

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { headers } from "next/headers";
-import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
 import { SubmitButton } from "./submit-button";
 
 export default function Login({
@@ -31,7 +31,7 @@ export default function Login({
   const signUp = async (formData: FormData) => {
     "use server";
 
-    const origin = headers().get("origin");
+    const origin = headers().get("origin")!;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const supabase = createClient();
@@ -108,11 +108,9 @@ export default function Login({
         >
           Sign Up
         </SubmitButton>
-        {searchParams?.message && (
-          <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
+        {searchParams.message ? <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
             {searchParams.message}
-          </p>
-        )}
+          </p> : null}
       </form>
     </div>
   );

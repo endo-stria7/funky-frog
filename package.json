@@ -1,12 +1,16 @@
 {
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "dev": "next dev",
+    "start": "next start",
+    "update-types": "npx supabase gen types typescript --project-id \"$PROJECT_REF\" > types/supabase.ts"
   },
+  "prettier": "@vercel/style-guide/prettier",
   "dependencies": {
     "@radix-ui/react-avatar": "^1.0.4",
+    "@radix-ui/react-checkbox": "^1.0.4",
+    "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@radix-ui/react-popover": "^1.0.7",
     "@radix-ui/react-slot": "^1.0.2",
@@ -43,6 +47,5 @@
     "prettier-plugin-tailwindcss": "^0.5.12",
     "tailwind-heropatterns": "^0.0.8",
     "tailwindcss-animate": "^1.0.7"
-  },
-  "prettier": "@vercel/style-guide/prettier"
+  }
 }

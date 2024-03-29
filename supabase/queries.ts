@@ -24,14 +24,14 @@ const supabase = createClient<Database>(
  */
 
 const getSupplierCategoryProductQuery = supabase.from('products').select(
-  `product_name, unit_price,
+  `product_name, unit_price,discontinued,
   categories(category_name),
   suppliers(supplier_id,company_name)`,
 );
 type SupplierCategoryProductData = QueryData<
   typeof getSupplierCategoryProductQuery
 >;
-export async function getSupplierCategoryProduct() {
+export async function getProductWithSupplierAndCategory() {
   const { data, error } = await getSupplierCategoryProductQuery;
   if (error) throw new Error(error.message);
   const supplierCategoryProductData: SupplierCategoryProductData = data;
@@ -165,4 +165,47 @@ export async function viewEmployeeRecentSales() {
   if (error) throw new Error(error.message);
   const viewEmployeeRecentSalesData: ViewEmployeeRecentSalesData = data;
   return viewEmployeeRecentSalesData;
+}
+
+/**
+ * View to calculate total revenue, total profit, profit margin, and profit margin rank for each product
+ */
+export async function viewProductWithProfitRank(
+  range:
+    | {
+        from?: number;
+        to?: number;
+      }
+    | undefined,
+) {
+  const { data: productProfitRankData, error } = await supabase
+    .from('product_revenue_and_profit_rank')
+    .select('*')
+    .range(range?.from ?? 0, range?.to ?? 9);
+  if (error) throw new Error(error.message);
+
+  return productProfitRankData;
+}
+
+export async function viewProductRevenueAndProfit({
+  range,
+}: {
+  range?: {
+    from: number;
+    to: number;
+  };
+} = {}) {
+  if (range?.from && range.to) {
+    const { data, error } = await supabase
+      .from('product_revenue_and_profit')
+      .select('*')
+      .range(range.from, range.to);
+    if (error) throw new Error(error.message);
+    return data;
+  }
+  const { data, error } = await supabase
+    .from('product_revenue_and_profit')
+    .select('*');
+  if (error) throw new Error(error.message);
+  return data;
 }

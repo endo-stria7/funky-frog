@@ -302,6 +302,20 @@ export interface Database {
             foreignKeyName: 'fk_order_details_products';
             columns: ['product_id'];
             isOneToOne: false;
+            referencedRelation: 'product_revenue_and_profit';
+            referencedColumns: ['product_id'];
+          },
+          {
+            foreignKeyName: 'fk_order_details_products';
+            columns: ['product_id'];
+            isOneToOne: false;
+            referencedRelation: 'product_revenue_and_profit_rank';
+            referencedColumns: ['product_id'];
+          },
+          {
+            foreignKeyName: 'fk_order_details_products';
+            columns: ['product_id'];
+            isOneToOne: false;
             referencedRelation: 'products';
             referencedColumns: ['product_id'];
           },
@@ -396,6 +410,8 @@ export interface Database {
       };
       products: {
         Row: {
+          categories?: { category_name: string };
+          suppliers?: { company_name: string };
           category_id: number | null;
           discontinued: number;
           product_id: number;
@@ -607,6 +623,48 @@ export interface Database {
         };
         Relationships: [];
       };
+      product_revenue_and_profit: {
+        Row: {
+          product_id: number | null;
+          product_name: string | null;
+          profit_margin: number | null;
+          total_profit: number | null;
+          total_revenue: number | null;
+        };
+        Relationships: [];
+      };
+      product_revenue_and_profit_rank: {
+        Row: {
+          category_id: number | null;
+          discontinued: number | null;
+          product_id: number | null;
+          product_name: string | null;
+          profit_margin: number | null;
+          profit_margin_rank: number | null;
+          quantity_per_unit: string | null;
+          reorder_level: number | null;
+          supplier_id: number | null;
+          unit_price: number | null;
+          units_in_stock: number | null;
+          units_on_order: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'fk_products_categories';
+            columns: ['category_id'];
+            isOneToOne: false;
+            referencedRelation: 'categories';
+            referencedColumns: ['category_id'];
+          },
+          {
+            foreignKeyName: 'fk_products_suppliers';
+            columns: ['supplier_id'];
+            isOneToOne: false;
+            referencedRelation: 'suppliers';
+            referencedColumns: ['supplier_id'];
+          },
+        ];
+      };
       recent_sales_by_customer: {
         Row: {
           customer_id: string | null;
@@ -714,6 +772,10 @@ export interface Database {
           f2: number;
           f3: number;
         }[];
+      };
+      calculate_sumof_product_profit: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
       };
       customer_freight_total: {
         Args: Record<PropertyKey, never>;

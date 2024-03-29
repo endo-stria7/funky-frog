@@ -181,3 +181,15 @@ export async function getProductSalesRanking(): Promise<object | Error> {
   }
   return data;
 }
+
+/**
+ * Function to calculate the sum of total profit from the view PRODUCT_REVENUE_AND_PROFIT table
+ * */
+
+export async function calculateSumofProductProfit() {
+  const { data, error } = await supabase.rpc('calculate_sumof_product_profit');
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+}

@@ -23,19 +23,33 @@ const supabase = createClient<Database>(
  * On c.category_id = p.category_id;
  */
 
-const getSupplierCategoryProductQuery = supabase.from('products').select(
-  `product_name, unit_price,discontinued,
-  categories(category_name),
-  suppliers(supplier_id,company_name)`,
-);
-type SupplierCategoryProductData = QueryData<
-  typeof getSupplierCategoryProductQuery
->;
-export async function getProductWithSupplierAndCategory() {
-  const { data, error } = await getSupplierCategoryProductQuery;
+const getSupplierCategoryProductQuery = (
+  limit = 10,
+  range = { from: 0, to: 9 },
+) =>
+  supabase
+    .from('products')
+    .select(
+      `product_name, unit_price, discontinued,
+      categories(category_name),
+      suppliers(supplier_id,company_name)`,
+      { count: 'exact' },
+    )
+    .range(range.from, range.to)
+    .limit(limit);
+export async function getProductWithSupplierAndCategory(
+  limit?: number,
+  range?: {
+    from: number;
+    to: number;
+  },
+) {
+  const { data, count, error } = await getSupplierCategoryProductQuery(
+    limit,
+    range,
+  );
   if (error) throw new Error(error.message);
-  const supplierCategoryProductData: SupplierCategoryProductData = data;
-  return supplierCategoryProductData;
+  return { data, count };
 }
 
 /**
@@ -170,18 +184,24 @@ export async function viewEmployeeRecentSales() {
 /**
  * View to calculate total revenue, total profit, profit margin, and profit margin rank for each product
  */
-export async function viewProductWithProfitRank(
-  range:
-    | {
-        from?: number;
-        to?: number;
-      }
-    | undefined,
-) {
+export async function viewProductWithProfitRank(range?: {
+  from?: number;
+  to?: number;
+}) {
+  if (range?.from && range.to) {
+    const { data: productProfitRankData, error } = await supabase
+      .from('product_revenue_and_profit_rank')
+      .select('*')
+      .range(range.from ?? 0, range.to ?? 9);
+
+    if (error) throw new Error(error.message);
+
+    return productProfitRankData;
+  }
   const { data: productProfitRankData, error } = await supabase
     .from('product_revenue_and_profit_rank')
-    .select('*')
-    .range(range?.from ?? 0, range?.to ?? 9);
+    .select('*');
+
   if (error) throw new Error(error.message);
 
   return productProfitRankData;

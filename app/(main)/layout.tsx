@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
-import MainNav from '@/components/main-nav';
-import AuthButton from '@/components/auth-button';
+import { TopNavBar } from '@/components/top-nav-bar';
 // import { SiteFooter } from '@/components/site-footer';
 
 interface DashboardLayoutProps {
@@ -23,10 +22,8 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <MainNav>
-        <AuthButton />
-      </MainNav>
-      <main>{children}</main>
+      <TopNavBar />
+      {children}
       {/* <SiteFooter className="border-t" /> */}
     </div>
   );

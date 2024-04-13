@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies -- clsx@"2.0.0" from class-variance-authority@0.7.0 */
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -17,14 +16,34 @@ export function nFormatter(num: number, digits?: number) {
     { value: 1e15, symbol: 'P' },
     { value: 1e18, symbol: 'E' },
   ];
-  const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-  var item = lookup
+  const rx = /\.0+$|(?<temp1>\.[0-9]*[1-9])0+$/;
+  const item = lookup
     .slice()
     .reverse()
-    .find(function (item) {
-      return num >= item.value;
-    });
+    .find((i) => num >= i.value);
   return item
-    ? (num / item.value).toFixed(digits || 1).replace(rx, '$1') + item.symbol
+    ? (num / item.value).toFixed(digits ?? 1).replace(rx, '$1') + item.symbol
     : '0';
+}
+export const rdItemsPerPages = (
+  maximum = 100,
+  minimum = 10,
+  requiredMaxLength = 10,
+) =>
+  Array.from(
+    new Set(
+      Array.from(
+        { length: 20 },
+        () => Math.floor(Math.random() * (maximum - minimum + 1)) + minimum,
+      ),
+    ),
+  ).slice(0, Math.floor(Math.random() * (requiredMaxLength - 1 + 1)) + 1);
+
+export function sliceIntoChunks(arr: unknown[], chunkSize: number) {
+  const result = [];
+  for (let i = 0; i < arr.length; i += chunkSize) {
+    const chunk = arr.slice(i, i + chunkSize);
+    result.push(chunk);
+  }
+  return result;
 }

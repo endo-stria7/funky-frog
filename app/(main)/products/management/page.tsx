@@ -1,26 +1,18 @@
 'use server';
 
 import Image from 'next/image';
-import { File, ListFilter, MoreHorizontal, PlusCircle } from 'lucide-react';
+import { MoreHorizontal, File, ListFilter, PlusCircle } from 'lucide-react';
 import { cache } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import {
   Table,
@@ -30,17 +22,42 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
+import { type Database } from '@/types/supabase';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getProductWithSupplierAndCategory } from '@/supabase/queries';
-import { type Database } from '@/types/supabase';
-import { cn } from '@/lib/utils';
+import TablePagination from './pagination';
 
 const cachedGetData = cache(getProductWithSupplierAndCategory);
-export default async function ProductManagementPage() {
-  const data =
-    (await cachedGetData()) as unknown as Database['public']['Tables']['products']['Row'][];
+
+export default async function ProductManagementPage({
+  searchParams,
+}: {
+  searchParams: { [Key in 'page' | 'limit']?: string };
+}) {
+  const page = Number(searchParams.page ?? '1');
+  const limit = Number(searchParams.limit ?? '10');
+  const offsetFrom = Math.max(0, limit * (page - 1));
+  const offsetTo = Math.max(limit * page - 1, limit - 1);
+
+  const { data, count: total } = (await cachedGetData(limit, {
+    from: offsetFrom,
+    to: offsetTo,
+  })) as unknown as {
+    data: Database['public']['Tables']['products']['Row'][];
+    count: number;
+  };
+
   return (
-    <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+    <section className="grid items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
       <Tabs defaultValue="all">
         <div className="flex items-center">
           <TabsList>
@@ -192,14 +209,15 @@ export default async function ProductManagementPage() {
               </Table>
             </CardContent>
             <CardFooter>
-              <div className="text-xs text-muted-foreground">
-                Showing <strong>1-10</strong> of <strong>{data.length}</strong>{' '}
-                products
-              </div>
+              <TablePagination
+                offsetFrom={offsetFrom}
+                total={total}
+                offsetTo={offsetTo}
+              />
             </CardFooter>
           </Card>
         </TabsContent>
       </Tabs>
-    </main>
+    </section>
   );
 }

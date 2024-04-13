@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import Header from '@/components/Header';
+import Header from '@/components/header';
 // import { NavBar } from './NavBar';
 import { TopNavBar } from '@/components/top-nav-bar';
 // import DashboardPage from './dashboard/page';

@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Badge } from './ui/badge';
 
 export default function MainNav({ children }: { children?: React.ReactNode }) {
   const pathname = usePathname();
@@ -28,17 +29,25 @@ export default function MainNav({ children }: { children?: React.ReactNode }) {
             item.href && (
               <Link
                 key={index}
-                href={item.href}
+                href={Object.hasOwn(item, 'disabled') ? '' : item.href}
                 className={cn(
                   'flex items-center text-sm font-medium',
                   pathname === item.href
                     ? 'text-foreground'
                     : 'text-muted-foreground',
                   Object.hasOwn(item, 'disabled') &&
-                    'cursor-not-allowed opacity-80',
+                    'cursor-not-allowed opacity-60',
                 )}
               >
                 {item.title}
+                {Object.hasOwn(item, 'disabled') && (
+                  <Badge
+                    variant="outline"
+                    className="ml-2 text-teal-500 border-teal-500"
+                  >
+                    WIP
+                  </Badge>
+                )}
               </Link>
             ),
         )}
@@ -65,9 +74,14 @@ export default function MainNav({ children }: { children?: React.ReactNode }) {
                   <Link
                     key={index}
                     href={item.href}
-                    className="hover:text-foreground"
+                    className={cn('hover:text-foreground')}
                   >
                     {item.title}
+                    {Object.hasOwn(item, 'disabled') && (
+                      <Badge variant="outline" className="ml-2">
+                        WIP
+                      </Badge>
+                    )}
                   </Link>
                 ),
             )}

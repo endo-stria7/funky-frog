@@ -12,6 +12,7 @@ export const siteConfig = {
     {
       title: 'Orders',
       href: '/orders',
+      disabled: true,
     },
     {
       title: 'Products',
@@ -20,15 +21,17 @@ export const siteConfig = {
     {
       title: 'Customers',
       href: '/customers',
+      disabled: true,
     },
     {
       title: 'Analytics',
       href: '/analytics',
+      disabled: true,
     },
   ],
   links: {
     twitter: 'https://twitter.com/shadcn',
-    github: 'https://github.com/shadcn/ui',
+    github: 'https://github.com/endo-stria7/funky-frog',
     docs: 'https://ui.shadcn.com',
   },
 };

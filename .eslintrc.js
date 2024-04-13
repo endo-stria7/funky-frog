@@ -18,6 +18,7 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-unsafe-return': 'off',
     'react/jsx-pascal-case': [1, { allowNamespace: true }],
+    'react/no-array-index-key': 'off',
     'no-console': ['error', { allow: ['warn', 'error', 'log'] }],
   },
   parserOptions: {
